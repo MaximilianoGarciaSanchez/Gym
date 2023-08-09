@@ -1,0 +1,10 @@
+.btn-rounded {
+    background-color: #781005;
+    border-color: #781005;
+}
+
+.btn-rounded:hover {
+    background-color: #363839;
+    border-color: #363839;
+}
+
