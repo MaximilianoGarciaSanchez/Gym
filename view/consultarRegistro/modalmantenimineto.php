@@ -5,7 +5,7 @@
                 <button type="button" class="modal-close" data-dismiss="modal" aria-label="Close">
                     <i class="font-icon-close-2"></i>
                 </button>
-                <h4 class="modal-title" id="mdltitulo">Editar Registro</h4>
+                <h4 class="modal-title" id="mdltitulo">Reinscripcion</h4>
             </div>
             <form method="post" id="alumno_form">
                
@@ -75,6 +75,21 @@
 							</fieldset>
 
                         </div>
+                        <div class="col-lg-6">
+                            <fieldset class="form-group">
+                                <label class="form-label semibold" for="semestre">Semestre</label>
+                                <select id="semestre" name="semestre" class="form-control">
+                                    <option value="ene-jun">Enero-Junio</option>
+                                    <option value="jul-dic">Julio-Diciembre</option>
+                                </select>
+                            </fieldset>
+                        </div>
+                        <div class="col-lg-6">
+                            <fieldset class="form-group">
+                                <label class="form-label semibold" for="anio">Año</label>
+                                <input type="text" id="anio" name="anio" class="form-control" placeholder="Año">
+                            </fieldset>
+                        </div>
 
                 <div class="modal-footer">
                     <button type="button" class="btn btn-rounded btn-default" data-dismiss="modal">Cerrar</button>
@@ -85,3 +100,13 @@
         </div>
     </div>
 </div>
+<script>
+    // Obtener el elemento del campo de año
+    var anioInput = document.getElementById("anio");
+    
+    // Obtener el año actual
+    var year = new Date().getFullYear();
+    
+    // Establecer el valor del campo de año con el año actual
+    anioInput.value = year;
+</script>

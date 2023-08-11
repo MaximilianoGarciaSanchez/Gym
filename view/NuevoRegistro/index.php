@@ -47,11 +47,11 @@ if(isset($_SESSION["usu_id"])){
 
 						<div class="col-lg-2">
 							<fieldset class="form-group">
-								<label class="form-label semibold" for="no_control">Numero De Control</label>
+								<label class="form-label semibold" for="no_control">No Control</label>
 								<input type="text" class="form-control" id="no_control" name="no_control" required>
 							</fieldset>
 						</div>
-						<div class="col-lg-4">
+						<div class="col-lg-3">
 							<fieldset class="form-group">
 								<label class="form-label semibold" for="alu_nom">Nombre</label>
 								<input type="text" class="form-control" id="alu_nom" name="alu_nom" placeholder="Ingrese su Nombre"required>
@@ -63,7 +63,7 @@ if(isset($_SESSION["usu_id"])){
 								<input type="text" class="form-control" id="alu_ape" name="alu_ape" placeholder="Ingrese sus apellidos"required>
 							</fieldset>
 						</div>
-						<div class="col-lg-2">
+						<div class="col-lg-3">
 							<fieldset class="form-group">
 								<label class="form-label semibold" for="gen_id">Genero</label>
 								<select id="gen_id" name="gen_id" class="form-control">
@@ -71,7 +71,7 @@ if(isset($_SESSION["usu_id"])){
 								</select>						
 							</fieldset>
 						</div>
-						<div class="col-lg-4">
+						<div class="col-lg-3">
 							<fieldset class="form-group">
 								<label class="form-label semibold" for="id_carrera">Carrera</label>
 								<select id="id_carrera" name="id_carrera" class="form-control">
@@ -79,7 +79,7 @@ if(isset($_SESSION["usu_id"])){
 								</select>						
 							</fieldset>
 						</div>
-						<div class="col-lg-4">
+						<div class="col-lg-3">
 							<fieldset class="form-group">
 								<label class="form-label semibold" for="sem_id">Semestre</label>
 								<select id="sem_id" name="sem_id" class="form-control">
@@ -87,24 +87,44 @@ if(isset($_SESSION["usu_id"])){
 								</select>						
 							</fieldset>
 						</div>
+							<div class="col-lg-3">
+							<fieldset class="form-group">
+								<label class="form-label semibold" for="fecha_inscripcion">Año del Semestre</label>
+								<select id="fecha_inscripcion" name="fecha_inscripcion" class="form-control">
+								</select>
+							</fieldset>
+						</div>
+
+                        <div class="col-lg-3">
+                            <fieldset class="form-group">
+                                <label class="form-label semibold" for="anio">Año</label>
+                                <input type="text" id="anio" name="anio" class="form-control" placeholder="Año">
+                            </fieldset>
+                        </div>
 						<div class="col-lg-12">
 						<button type="submit" name="action" value="add" class="btn btn-rounded btn-inline btn-primary">Guardar</button>
 						</div>	
+						
 					</form>
  
 					</div>
 				</div>
-				<!-- <div class="summernote-theme-1" id="exMedico">
-					<textarea class="summernote" name="name">Examen Medico</textarea>
-				</div> -->
-				
-
-
 			</div>
 		</div>
 	</div>
 
-		<!-- Contendido -->
+
+	<script>
+			// Obtener el elemento del campo de año
+			var anioInput = document.getElementById("anio");
+			
+			// Obtener el año actual
+			var year = new Date().getFullYear();
+			
+			// Establecer el valor del campo de año con el año actual
+			anioInput.value = year;
+	</script>
+		
 
 
 	<?php require_once("../MainJS/js.php");?>

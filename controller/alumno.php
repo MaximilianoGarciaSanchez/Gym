@@ -6,7 +6,7 @@
     switch($_GET["op"]){
         
         case "insert":
-            $alumno->insert_alumno($_POST["usu_id"],$_POST["no_control"],$_POST["alu_nom"],$_POST["alu_ape"],$_POST["gen_id"],$_POST["id_carrera"],$_POST["sem_id"]);
+            $alumno->insert_alumno($_POST["usu_id"],$_POST["no_control"],$_POST["alu_nom"],$_POST["alu_ape"],$_POST["gen_id"],$_POST["id_carrera"],$_POST["sem_id"],$_POST["fecha_inscripcion"],$_POST["anio"]);
         break;
 
         case "listar_x_usu":
@@ -110,127 +110,126 @@
         break;
         
         case "listar_entrada":
-            $datos = $alumno->listar_entrada(); // Cambia al método que filtra por fecha actual
-            $data = array();
-    
-            foreach ($datos as $row) {
-                $sub_array = array();
-                $sub_array[] = $row["no_control"];
-                $sub_array[] = $row["alu_nom"];
-                $sub_array[] = $row["alu_ape"];
-    
-                if ($row["alu_estado"] == 'Entrada') {
-                    $sub_array[] = '<span class="label label-pill label-success">Entrada</span>';
-                } else {
-                    $sub_array[] = '<span class="label label-pill label-danger">Salida</span>';
-                }
-    
-                $sub_array[] = date("d/m/Y", strtotime($row["fecha"]));
-                $sub_array[] = date("H:i:s", strtotime($row["hora_inicio"]));
-                $sub_array[] = date("H:i:s", strtotime($row["hora_fin"]));
-    
-                $data[] = $sub_array;
-            }
-    
-            $results = array(
-                "sEcho" => 1,
-                "iTotalDisplayRecords" => count($data),
-                "aaData" => $data
-            );
-    
-            echo json_encode($results);
-            break;
+                    $datos = $alumno->listar_entrada(); // Cambia al método que filtra por fecha actual
+                    $data = array();
+            
+                    foreach ($datos as $row) {
+                        $sub_array = array();
+                        $sub_array[] = $row["no_control"];
+                        $sub_array[] = $row["alu_nom"];
+                        $sub_array[] = $row["alu_ape"];
+            
+                        if ($row["alu_estado"] == 'Entrada') {
+                            $sub_array[] = '<span class="label label-pill label-success">Entrada</span>';
+                        } else {
+                            $sub_array[] = '<span class="label label-pill label-danger">Salida</span>';
+                        }
+            
+                        $sub_array[] = date("d/m/Y", strtotime($row["fecha"]));
+                        $sub_array[] = date("H:i:s", strtotime($row["hora_inicio"]));
+                        $sub_array[] = date("H:i:s", strtotime($row["hora_fin"]));
+            
+                        $data[] = $sub_array;
+                    }
+            
+                    $results = array(
+                        "sEcho" => 1,
+                        "iTotalDisplayRecords" => count($data),
+                        "aaData" => $data
+                    );
+            
+                    echo json_encode($results);
+        break;
         
         case "listar_detalle":
             $datos = $alumno->listar_alumnodetalle($_POST["alu_id"]);
             ?> 
         
-            <!-- Mostrar detalles generales del alumno -->
-            <div class="alumno-details">
-               
-                <!-- Mostrar detalles generales del alumno -->
-                            <div class="alumno-details">
-                                <?php
-                                // Verificar si hay datos antes de mostrar los detalles generales
-                                if (!empty($datos)) {
-                                    $datos_generales = $datos[0];
-                                    ?>
-                                    
-                                    <section class="card card-orange">
-                                <header class="card-header">
-                                    <?php echo $datos_generales['alu_nom'].' '.$datos_generales['alu_ape']; ?>
-                                    <span class="label label-pill label-danger"><?php echo $datos_generales['no_control']; ?></span>
-                                    <button type="button" class="modal-close"></button>
-                                </header>
-                            </section>
-
-                    <?php
-                    } else {
-                        echo "<p>No se encontraron detalles para el alumno.</p>";
-                    }
-                    ?>
-
-                    <?php
-                    // Verificar si hay datos antes de mostrar los totales por semestre
-                    if (!empty($datos)) {
-                        // Array para almacenar los totales por semestre
-                        $totales_por_semestre = array();
-                        foreach ($datos as $row) {
-                            $semestre = $row['semestre_registrado'];
-                            // Verificar si el semestre aún no está en el array
-                            if (!isset($totales_por_semestre[$semestre])) {
-                                // Agregar el semestre al array y asignar el total de horas
-                                $totales_por_semestre[$semestre] = date("H:i:s", strtotime($row["total_tiempo_total"]));
-                            }
-                        }
-
-                        // Mostrar los totales de horas por semestre utilizando el switch-case
-                        foreach ($totales_por_semestre as $semestre => $total_horas) {
-                            ?>
-                            <div class="activity-line-item box-typical">
-                                <div class="activity-line-date">Total De Horas (Semestre <?php echo $semestre; ?>)</div>
-                                <header class="activity-line-item-header">
-                                    <div class="activity-line-item-user-name">Registro Total De Horas   </div>
-                                    <span class="label label-pill label-info"><?php echo $total_horas; ?></span>
-                                </header>
-                            </div>
+                    <!-- Mostrar detalles generales del alumno -->
+                    <div class="alumno-details">
+                
+                        <!-- Mostrar detalles generales del alumno -->
+                        <div class="alumno-details">
                             <?php
-                        }
-                    }
-                    ?>
-                </div>
-
-    
-            <!-- Mostrar detalles de asistencia (dentro del foreach) -->
-            <div class="box-typical box-typical-padding" id="table">
-                    <table id="alumno_data" class="table table-bordered table-striped table-vcenter js-dataTable-full">
-                        <thead>
-                            <tr>
-                                <th class="d-none d-sm-table-cell" style="width: 20%;">Semestre</th>
-                                <th class="d-none d-sm-table-cell" style="width: 20%;">Fecha</th>
-                                <th class="d-none d-sm-table-cell" style="width: 20%;">Entrada</th>
-                                <th class="d-none d-sm-table-cell" style="width: 20%;">Salida</th>
-                                <th class="d-none d-sm-table-cell" style="width: 20%;">Tiempo total</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php
-                            foreach ($datos as $row) {
+                            // Verificar si hay datos antes de mostrar los detalles generales
+                            if (!empty($datos)) {
+                                $datos_generales = $datos[0];
                                 ?>
-                                <tr>
-                                    <!-- Aquí llenamos las celdas de la tabla con los datos de asistencia -->
-                                    <td><?php echo $row['semestre_registrado']; ?></td>
-                                    <td><?php echo $row['fecha']; ?></td>
-                                    <td><?php echo $row['hora_inicio']; ?></td>
-                                    <td><?php echo $row['hora_fin']; ?></td>
-                                    <td><?php echo $row['total_tiempo']; ?></td>
-                                </tr>
-                                <?php
+                
+                                <section class="card card-orange">
+                                    <header class="card-header">
+                                        <?php echo $datos_generales['alu_nom'].' '.$datos_generales['alu_ape']; ?>
+                                        <span class="label label-pill label-danger"><?php echo $datos_generales['no_control']; ?></span>
+                                        <button type="button" class="modal-close"></button>
+                                    </header>
+                                </section>
+                
+                            <?php
+                            } else {
+                                echo "<p>No se encontraron detalles para el alumno.</p>";
                             }
                             ?>
-                        </tbody>
-                    </table>
-                </div>
+                
+                            <?php
+                            // Verificar si hay datos antes de mostrar los totales por fecha de inscripción
+                            if (!empty($datos)) {
+                                // Array para almacenar los totales por fecha de inscripción
+                                $totales_por_fecha_inscripcion = array();
+                                foreach ($datos as $row) {
+                                    $fecha_inscripcion = $row['fecha_inscripcion'];
+                                    // Verificar si la fecha de inscripción aún no está en el array
+                                    if (!isset($totales_por_fecha_inscripcion[$fecha_inscripcion])) {
+                                        // Agregar la fecha de inscripción al array y asignar el total de horas
+                                        $totales_por_fecha_inscripcion[$fecha_inscripcion] = date("H:i:s", strtotime($row["total_tiempo_total"]));
+                                    }
+                                }
+                
+                                // Mostrar los totales de horas por fecha de inscripción utilizando el switch-case
+                                foreach ($totales_por_fecha_inscripcion as $fecha_inscripcion => $total_horas) {
+                                    ?>
+                                    <div class="activity-line-item box-typical">
+                                        <div class="activity-line-date">Total De Horas (Fecha de Inscripción <?php echo $fecha_inscripcion; ?>)</div>
+                                        <header class="activity-line-item-header">
+                                            <div class="activity-line-item-user-name">Registro Total De Horas   </div>
+                                            <span class="label label-pill label-info"><?php echo $total_horas; ?></span>
+                                        </header>
+                                    </div>
+                                    <?php
+                                }
+                            }
+                            ?>
+                        </div>
+                
+                        <!-- Mostrar detalles de asistencia (dentro del foreach) -->
+                        <div class="box-typical box-typical-padding" id="table">
+                            <table id="alumno_data" class="table table-bordered table-striped table-vcenter js-dataTable-full">
+                                <thead>
+                                    <tr>
+                                        <th class="d-none d-sm-table-cell" style="width: 20%;">Fecha de Inscripción</th>
+                                        <th class="d-none d-sm-table-cell" style="width: 20%;">Fecha</th>
+                                        <th class="d-none d-sm-table-cell" style="width: 20%;">Entrada</th>
+                                        <th class="d-none d-sm-table-cell" style="width: 20%;">Salida</th>
+                                        <th class="d-none d-sm-table-cell" style="width: 20%;">Tiempo total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php
+                                    foreach ($datos as $row) {
+                                        ?>
+                                        <tr>
+                                            <!-- Aquí llenamos las celdas de la tabla con los datos de asistencia -->
+                                            <td><?php echo date('Y-m-d', strtotime($row['fecha_inscripcion'])); ?></td>
+                                            <td><?php echo $row['fecha']; ?></td>
+                                            <td><?php echo $row['hora_inicio']; ?></td>
+                                            <td><?php echo $row['hora_fin']; ?></td>
+                                            <td><?php echo $row['total_tiempo']; ?></td>
+                                        </tr>
+                                        <?php
+                                    }
+                                    ?>
+                                </tbody>
+                            </table>
+                        </div>
                         <?php
                         foreach ($datos as $row) {
                             ?>
@@ -241,21 +240,27 @@
                             <?php
                         }
                         ?>
-                    </tbody>
-                </table>
-            </div>
+                    </div>
         
-            <?php
-            
+                    <?php
         break;
+        
     
         case "guardaryeditar":
             if (!empty($_POST["alu_id"])) {
-                $alu_id = $_POST["alu_id"];$no_control = $_POST["no_control1"]; $alu_nom = $_POST["alu_nom1"];$alu_ape = $_POST["alu_ape1"]; $gen_id = $_POST["gen_id1"]; $id_carrera = $_POST["id_carrera1"];$sem_id = $_POST["sem_id1"];
-                $alumno->update_alumno($alu_id, $no_control, $alu_nom, $alu_ape, $gen_id, $id_carrera, $sem_id);
-            }
+            $alu_id = $_POST["alu_id"];
+            $no_control = $_POST["no_control1"];
+            $alu_nom = $_POST["alu_nom1"];
+            $alu_ape = $_POST["alu_ape1"];
+            $gen_id = $_POST["gen_id1"];
+            $id_carrera = $_POST["id_carrera1"];
+            $sem_id = $_POST["sem_id1"];
+            $fecha_inscripcion = $_POST["fecha_inscripcion"]; // Asegúrate de obtener este valor correctamente
             
+            $alumno->update_alumno($alu_id, $no_control, $alu_nom, $alu_ape, $gen_id, $id_carrera, $sem_id, $fecha_inscripcion);
+            }
         break;
+
    
         case "eliminar":
             $alumno->delete_alumno($_POST["alu_id"]);

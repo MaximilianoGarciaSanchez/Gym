@@ -1,10 +1,10 @@
 <?php 
 class Alumno extends Conectar{
 
-    public function insert_alumno($usu_id,$no_control,$alu_nom,$alu_ape,$gen_id,$id_carrera,$sem_id){
+    public function insert_alumno($usu_id,$no_control,$alu_nom,$alu_ape,$gen_id,$id_carrera,$sem_id,$fecha_inscripcion,$anio){
         $conectar= parent::conexion();
         parent::set_names();
-        $sql="INSERT INTO tm_alumno (alu_id, usu_id, no_control, alu_nom, alu_ape, gen_id, id_carrera, sem_id ,fech_crea,estado,est) VALUES (NULL, ?,?,?,?,?,?,?,now(),'Activado','1');";
+        $sql="INSERT INTO tm_alumno (alu_id, usu_id, no_control, alu_nom, alu_ape, gen_id, id_carrera, sem_id ,fecha_inscripcion,anio,estado,est) VALUES (NULL, ?,?,?,?,?,?,?,?,?,'Activado','1');";
         $sql=$conectar->prepare($sql);
         $sql->bindValue(1, $usu_id);
         $sql->bindValue(2, $no_control);
@@ -13,6 +13,9 @@ class Alumno extends Conectar{
         $sql->bindValue(5, $gen_id);
         $sql->bindValue(6, $id_carrera);
         $sql->bindValue(7, $sem_id);
+        $sql->bindValue(8, $fecha_inscripcion);
+        $sql->bindValue(9, $anio);
+
 
         $sql->execute();
         return $resultado=$sql->fetchAll();
@@ -30,7 +33,7 @@ class Alumno extends Conectar{
             tm_alumno.gen_id, 
             tm_alumno.sem_id, 
             tm_alumno.estado,
-            tm_alumno.fech_crea,  
+            tm_alumno.fecha_inscripcion,  
             tm_usuarios.usu_nom, 
             tm_usuarios.usu_ape, 
             tm_genero.gen_nombre, 
@@ -63,7 +66,7 @@ class Alumno extends Conectar{
             tm_alumno.gen_id, 
             tm_alumno.id_carrera, 
             tm_alumno.sem_id, 
-            tm_alumno.fech_crea,
+            tm_alumno.fecha_inscripcion,
             tm_alumno.estado 
             tm_usuarios.usu_nom, 
             tm_usuarios.usu_ape, 
@@ -99,7 +102,6 @@ class Alumno extends Conectar{
         return $resultado = $sql->fetchAll();
     }
 
-    
     public function listar_alumnodetalle($alu_id) {
         $conectar = parent::conexion();
         parent::set_names();
@@ -170,7 +172,7 @@ class Alumno extends Conectar{
         return $resultado=$sql->fetchAll();
     }
     
-    public function update_alumno($alu_id, $no_control, $alu_nom, $alu_ape, $gen_id, $id_carrera, $sem_id) {
+    public function update_alumno($alu_id, $no_control, $alu_nom, $alu_ape, $gen_id, $id_carrera, $sem_id, $fecha_inscripcion) {
         $conectar = parent::conexion();
         parent::set_names();
         $sql = "UPDATE tm_alumno SET 
@@ -181,7 +183,7 @@ class Alumno extends Conectar{
                     id_carrera = ?,
                     sem_id = ?,
                     estado = 'Activado',
-                    fecha_inscripcion = now()
+                    fecha_inscripcion = ?
                     WHERE 
                     alu_id = ?
                 ";
@@ -192,11 +194,13 @@ class Alumno extends Conectar{
         $sql->bindValue(4, $gen_id);
         $sql->bindValue(5, $id_carrera);
         $sql->bindValue(6, $sem_id);
-        $sql->bindValue(7, $alu_id);
+        $sql->bindValue(7, $fecha_inscripcion);
+        $sql->bindValue(8, $alu_id);
     
         $sql->execute();
         return $sql->fetchAll();
     }
+    
 
     public function get_alumno_x_id($alu_id){
         $conectar= parent::conexion();
@@ -210,7 +214,7 @@ class Alumno extends Conectar{
             tm_alumno.gen_id, 
             tm_alumno.id_carrera, 
             tm_alumno.sem_id, 
-            tm_alumno.fech_crea, 
+            -- tm_alumno.fecha_inscripcion, 
             tm_usuarios.usu_nom, 
             tm_usuarios.usu_ape, 
             tm_genero.gen_nombre, 
