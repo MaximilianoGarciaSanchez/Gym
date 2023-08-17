@@ -7,8 +7,6 @@
         case "combo":
             $datos = $anio->get_anio();
             $html="";
-            $html.="<option label='Seleccionar'></option>
-            ";
             if(is_array($datos)==true and count($datos)>0){
                 // $html= "<option></option>";
                 foreach($datos as $row)

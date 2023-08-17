@@ -7,16 +7,16 @@ function init(){
         });
 }
 
-// Suponiendo que tienes una función para manejar el envío del formulario
-function enviarFormulario() {
-        // Realiza la lógica de envío del formulario aquí
+// // Suponiendo que tienes una función para manejar el envío del formulario
+// function enviarFormulario() {
+//         // Realiza la lógica de envío del formulario aquí
         
-        // Limpia los campos del formulario
-        document.getElementById("gen_id").value = "";
-        document.getElementById("id_carrera").value = "";
-        document.getElementById("sem_id").value = "";
-        document.getElementById("fecha_inscripcion").value = "";
-    }
+//         // Limpia los campos del formulario
+//         document.getElementById("gen_id").value = "";
+//         document.getElementById("id_carrera").value = "";
+//         document.getElementById("sem_id").value = "";
+//         document.getElementById("fecha_inscripcion").value = "";
+//     }
     
     
 
@@ -55,6 +55,7 @@ function guardaryeditar(e){
                         $('#id_carrera').val('');
                         $('#sem_id').val('');
                         $('#fecha_inscripcion').val('');
+                        $('#anio').val('');
                 swal("Correcto!", "Registrado Correctamente", "success");
                 }
 

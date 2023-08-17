@@ -77,8 +77,8 @@
                         </div>
                         <div class="col-lg-6">
                             <fieldset class="form-group">
-                                <label class="form-label semibold" for="semestre">Semestre</label>
-                                <select id="semestre" name="semestre" class="form-control">
+                                <label class="form-label semibold" for="fecha_inscripcion">Semestre</label>
+                                <select id="fecha_inscripcion" name="fecha_inscripcion" class="form-control">
                                     <option value="ene-jun">Enero-Junio</option>
                                     <option value="jul-dic">Julio-Diciembre</option>
                                 </select>
@@ -87,7 +87,7 @@
                         <div class="col-lg-6">
                             <fieldset class="form-group">
                                 <label class="form-label semibold" for="anio">Año</label>
-                                <input type="text" id="anio" name="anio" class="form-control" placeholder="Año">
+                                <input type="text" id="anio1" name="anio" class="form-control" placeholder="Año">
                             </fieldset>
                         </div>
 
@@ -100,13 +100,3 @@
         </div>
     </div>
 </div>
-<script>
-    // Obtener el elemento del campo de año
-    var anioInput = document.getElementById("anio");
-    
-    // Obtener el año actual
-    var year = new Date().getFullYear();
-    
-    // Establecer el valor del campo de año con el año actual
-    anioInput.value = year;
-</script>

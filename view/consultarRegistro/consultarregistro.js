@@ -60,7 +60,10 @@ $(document).ready(function(){
       });
       $.post("../../controller/semestre.php?op=combo",function(data, status){    
         $('#sem_id').html(data);     
-   //      console.log(data);   
+        
+      $.post("../../controller/aniosemestre.php?op=combo",function(data, status){    
+            $('#fecha_inscripcion').html(data); 
+      });
 });
 
     if(rol_id==1){
@@ -207,7 +210,7 @@ function ver(alu_id){
 }
 
 function editar(alu_id){
-    $.post("../../controller/alumno.php?op=mostrar", {alu_id : alu_id}, function (data) {
+    $.post("../../controller/alumno.php?op=mostrar", {alu_id: alu_id}, function (data) {
         data = JSON.parse(data);
         $('#alu_id').val(data.alu_id);
         $('#no_control1').val(data.no_control);
@@ -216,12 +219,13 @@ function editar(alu_id){
         $('#gen_id1').val(data.gen_id).trigger('change');
         $('#id_carrera1').val(data.id_carrera).trigger('change');
         $('#sem_id1').val(data.sem_id).trigger('change');
-        
+        $('#fecha_inscripcion').val(data.fecha_inscripcion).trigger('change');  // Ajustado el ID del campo
+        $('#anio1').val(data.anio);
     }); 
 
     $('#modalmantenimiento').modal('show');
-
 }
+
 
 $(document).on("click","#btnfiltrar", function(){
     limpiar();

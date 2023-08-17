@@ -171,30 +171,34 @@
                             ?>
                 
                             <?php
-                            // Verificar si hay datos antes de mostrar los totales por fecha de inscripción
+                            // Verificar si hay datos antes de mostrar los totales por fecha de semestre
                             if (!empty($datos)) {
-                                // Array para almacenar los totales por fecha de inscripción
-                                $totales_por_fecha_inscripcion = array();
+                                // Array para almacenar los totales por fecha de semestre
+                                $totales_por_semestre_registrado = array();
                                 foreach ($datos as $row) {
-                                    $fecha_inscripcion = $row['fecha_inscripcion'];
-                                    // Verificar si la fecha de inscripción aún no está en el array
-                                    if (!isset($totales_por_fecha_inscripcion[$fecha_inscripcion])) {
-                                        // Agregar la fecha de inscripción al array y asignar el total de horas
-                                        $totales_por_fecha_inscripcion[$fecha_inscripcion] = date("H:i:s", strtotime($row["total_tiempo_total"]));
+                                    $semestre_registrado = $row['semestre_registrado'];
+                                    $anio = $row['anio']; // Agregamos el campo "anio"
+                                    
+                                    // Verificar si el semestre y el año aún no están en el array
+                                    if (!isset($totales_por_semestre_registrado[$semestre_registrado][$anio])) {
+                                        // Agregar el semestre y el año al array y asignar el total de horas
+                                        $totales_por_semestre_registrado[$semestre_registrado][$anio] = date("H:i:s", strtotime($row["total_tiempo_total"]));
                                     }
                                 }
-                
-                                // Mostrar los totales de horas por fecha de inscripción utilizando el switch-case
-                                foreach ($totales_por_fecha_inscripcion as $fecha_inscripcion => $total_horas) {
-                                    ?>
-                                    <div class="activity-line-item box-typical">
-                                        <div class="activity-line-date">Total De Horas (Fecha de Inscripción <?php echo $fecha_inscripcion; ?>)</div>
-                                        <header class="activity-line-item-header">
-                                            <div class="activity-line-item-user-name">Registro Total De Horas   </div>
-                                            <span class="label label-pill label-info"><?php echo $total_horas; ?></span>
-                                        </header>
-                                    </div>
-                                    <?php
+                            
+                                // Mostrar los totales de horas por semestre y año utilizando un bucle anidado
+                                foreach ($totales_por_semestre_registrado as $semestre_registrado => $totales_por_anio) {
+                                    foreach ($totales_por_anio as $anio => $total_horas) {
+                                        ?>
+                                        <div class="activity-line-item box-typical">
+                                            <div class="activity-line-date"><?php echo $anio; ?> <?php echo ($semestre_registrado == 1) ? 'Enero-Junio' : 'Julio-Diciembre'; ?></div>
+                                            <header class="activity-line-item-header">
+                                                <div class="activity-line-item-user-name">Registro Total De Horas   </div>
+                                                <span class="label label-pill label-info"><?php echo $total_horas; ?></span>
+                                            </header>
+                                        </div>
+                                        <?php
+                                    }
                                 }
                             }
                             ?>
@@ -218,7 +222,12 @@
                                         ?>
                                         <tr>
                                             <!-- Aquí llenamos las celdas de la tabla con los datos de asistencia -->
-                                            <td><?php echo date('Y-m-d', strtotime($row['fecha_inscripcion'])); ?></td>
+                                            <td>
+                                            <?php
+                                            $semestre = ($row['semestre_registrado'] == 1) ? "Enero-Junio" : "Julio-Diciembre";
+                                            echo $row['anio'] . ' - ' . $semestre;
+                                            ?>
+                                            </td>
                                             <td><?php echo $row['fecha']; ?></td>
                                             <td><?php echo $row['hora_inicio']; ?></td>
                                             <td><?php echo $row['hora_fin']; ?></td>
@@ -248,19 +257,33 @@
     
         case "guardaryeditar":
             if (!empty($_POST["alu_id"])) {
-            $alu_id = $_POST["alu_id"];
-            $no_control = $_POST["no_control1"];
-            $alu_nom = $_POST["alu_nom1"];
-            $alu_ape = $_POST["alu_ape1"];
-            $gen_id = $_POST["gen_id1"];
-            $id_carrera = $_POST["id_carrera1"];
-            $sem_id = $_POST["sem_id1"];
-            $fecha_inscripcion = $_POST["fecha_inscripcion"]; // Asegúrate de obtener este valor correctamente
-            
-            $alumno->update_alumno($alu_id, $no_control, $alu_nom, $alu_ape, $gen_id, $id_carrera, $sem_id, $fecha_inscripcion);
+                $alu_id = $_POST["alu_id"];
+                $no_control = $_POST["no_control1"];
+                $alu_nom = $_POST["alu_nom1"];
+                $alu_ape = $_POST["alu_ape1"];
+                $gen_id = $_POST["gen_id1"];
+                $id_carrera = $_POST["id_carrera1"];
+                $sem_id = $_POST["sem_id1"];
+                $fecha_inscripcion = isset($_POST["fecha_inscripcion"]) ? $_POST["fecha_inscripcion"] : null;
+                $anio = $_POST["anio"];
+    
+        
+                // Aquí se manejarían posibles validaciones adicionales
+        
+                // Llamada a la función de actualización y manejo de errores
+                try {
+                    $resultado = $alumno->update_alumno($alu_id, $no_control, $alu_nom, $alu_ape, $gen_id, $id_carrera, $sem_id, $fecha_inscripcion, $anio);
+                    if ($resultado) {
+                        echo "Actualización exitosa"; // Mostrar retroalimentación al usuario
+                    } else {
+                        echo "Error al actualizar"; // Mostrar retroalimentación al usuario
+                    }
+                } catch (PDOException $e) {
+                    echo "Error en la base de datos: " . $e->getMessage(); // Mostrar mensaje de error específico
+                }
             }
         break;
-
+        
    
         case "eliminar":
             $alumno->delete_alumno($_POST["alu_id"]);
@@ -283,6 +306,12 @@
                     $output["gen_id"] = $row["gen_id"];
                     $output["id_carrera"] = $row["id_carrera"];
                     $output["sem_id"] = $row["sem_id"];
+                    $output["fecha_inscripcion"] = $row["fecha_inscripcion"];
+                    $output["anio"] = $row["anio"];
+                    
+
+
+
                 }
                 echo json_encode($output);
             }

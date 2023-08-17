@@ -102,51 +102,55 @@ class Alumno extends Conectar{
         return $resultado = $sql->fetchAll();
     }
 
-    public function listar_alumnodetalle($alu_id) {
-        $conectar = parent::conexion();
-        parent::set_names();
-    
-        $sql = "SELECT 
-                    tm_alumno.no_control,
-                    tm_alumno.alu_nom,
-                    tm_alumno.alu_ape,
-                    tm_alumno.fecha_inscripcion, -- Agregamos el campo fecha_inscripcion
-                    td_asistencia2.semestre_registrado,
-                    td_asistencia2.fecha,
-                    td_asistencia2.hora_inicio,
-                    td_asistencia2.hora_fin,
-                    SEC_TO_TIME(SUM(TIME_TO_SEC(TIMEDIFF(td_asistencia2.hora_fin, td_asistencia2.hora_inicio)))) AS total_tiempo,
-                    (
-                        SELECT SEC_TO_TIME(
-                            SUM(
-                                CASE
-                                    WHEN TIME_TO_SEC(TIMEDIFF(t2.hora_fin, t2.hora_inicio)) > TIME_TO_SEC('01:30:00')
-                                    THEN TIME_TO_SEC('01:30:00')
-                                    ELSE TIME_TO_SEC(TIMEDIFF(t2.hora_fin, t2.hora_inicio))
-                                END
-                            )
+   public function listar_alumnodetalle($alu_id) {
+    $conectar = parent::conexion();
+    parent::set_names();
+
+    $sql = "SELECT 
+                tm_alumno.no_control,
+                tm_alumno.alu_nom,
+                tm_alumno.alu_ape,
+                td_asistencia2.anio,
+                td_asistencia2.semestre_registrado,
+                td_asistencia2.fecha,
+                td_asistencia2.hora_inicio,
+                td_asistencia2.hora_fin,
+                SEC_TO_TIME(SUM(TIME_TO_SEC(TIMEDIFF(td_asistencia2.hora_fin, td_asistencia2.hora_inicio)))) AS total_tiempo,
+                (
+                    SELECT SEC_TO_TIME(
+                        SUM(
+                            CASE
+                                WHEN TIME_TO_SEC(TIMEDIFF(t2.hora_fin, t2.hora_inicio)) > TIME_TO_SEC('01:30:00')
+                                THEN TIME_TO_SEC('01:30:00')
+                                ELSE TIME_TO_SEC(TIMEDIFF(t2.hora_fin, t2.hora_inicio))
+                            END
                         )
-                        FROM td_asistencia2 AS t2
-                        WHERE t2.no_control = tm_alumno.no_control
-                        AND t2.semestre_registrado = td_asistencia2.semestre_registrado
-                    ) AS total_tiempo_total
-                FROM 
-                    td_asistencia2
-                    INNER JOIN tm_alumno ON td_asistencia2.no_control = tm_alumno.no_control
-                WHERE
-                    tm_alumno.alu_id = ?
-                GROUP BY 
-                    tm_alumno.no_control, tm_alumno.alu_nom, tm_alumno.alu_ape, tm_alumno.fecha_inscripcion, td_asistencia2.semestre_registrado, td_asistencia2.fecha, td_asistencia2.hora_inicio, td_asistencia2.hora_fin
-                ORDER BY
-                    td_asistencia2.semestre_registrado";
+                    )
+                    FROM td_asistencia2 AS t2
+                    WHERE t2.no_control = tm_alumno.no_control
+                          AND t2.semestre_registrado = td_asistencia2.semestre_registrado
+                          AND t2.anio = td_asistencia2.anio -- Corrección aquí: usar t2.anio en lugar de YEAR(t2.fecha)
+                ) AS total_tiempo_total
+            FROM 
+                td_asistencia2
+                INNER JOIN tm_alumno ON td_asistencia2.no_control = tm_alumno.no_control
+            WHERE
+                tm_alumno.alu_id = ?
+            GROUP BY 
+                tm_alumno.no_control, tm_alumno.alu_nom, tm_alumno.alu_ape, td_asistencia2.anio, td_asistencia2.semestre_registrado, td_asistencia2.fecha, td_asistencia2.hora_inicio, td_asistencia2.hora_fin
+            ORDER BY
+                td_asistencia2.semestre_registrado";
+
+    $sql = $conectar->prepare($sql);
+    $sql->bindValue(1, $alu_id);
+    $sql->execute();
+    $resultado = $sql->fetchAll();
+
+    return $resultado;
+}
+
     
-        $sql = $conectar->prepare($sql);
-        $sql->bindValue(1, $alu_id);
-        $sql->execute();
-        $resultado = $sql->fetchAll();
     
-        return $resultado;
-    }
     
     public function delete_alumno($alu_id){
         $conectar= parent::conexion();
@@ -172,7 +176,7 @@ class Alumno extends Conectar{
         return $resultado=$sql->fetchAll();
     }
     
-    public function update_alumno($alu_id, $no_control, $alu_nom, $alu_ape, $gen_id, $id_carrera, $sem_id, $fecha_inscripcion) {
+    public function update_alumno($alu_id, $no_control, $alu_nom, $alu_ape, $gen_id, $id_carrera, $sem_id, $fecha_inscripcion, $anio) {
         $conectar = parent::conexion();
         parent::set_names();
         $sql = "UPDATE tm_alumno SET 
@@ -183,56 +187,52 @@ class Alumno extends Conectar{
                     id_carrera = ?,
                     sem_id = ?,
                     estado = 'Activado',
-                    fecha_inscripcion = ?
-                    WHERE 
+                    fecha_inscripcion = ?,
+                    anio = ?
+                WHERE 
                     alu_id = ?
                 ";
-        $sql = $conectar->prepare($sql);
-        $sql->bindValue(1, $no_control);
-        $sql->bindValue(2, $alu_nom);
-        $sql->bindValue(3, $alu_ape);
-        $sql->bindValue(4, $gen_id);
-        $sql->bindValue(5, $id_carrera);
-        $sql->bindValue(6, $sem_id);
-        $sql->bindValue(7, $fecha_inscripcion);
-        $sql->bindValue(8, $alu_id);
-    
-        $sql->execute();
-        return $sql->fetchAll();
+        $stmt = $conectar->prepare($sql);
+        $result = $stmt->execute([$no_control, $alu_nom, $alu_ape, $gen_id, $id_carrera, $sem_id, $fecha_inscripcion, $anio, $alu_id]);
+        
+        return $result;
     }
+    
     
 
-    public function get_alumno_x_id($alu_id){
-        $conectar= parent::conexion();
+    public function get_alumno_x_id($alu_id) {
+        $conectar = parent::conexion();
         parent::set_names();
-        $sql="SELECT 
-            tm_alumno.alu_id, 
-            tm_alumno.usu_id, 
-            tm_alumno.no_control, 
-            tm_alumno.alu_nom, 
-            tm_alumno.alu_ape, 
-            tm_alumno.gen_id, 
-            tm_alumno.id_carrera, 
-            tm_alumno.sem_id, 
-            -- tm_alumno.fecha_inscripcion, 
-            tm_usuarios.usu_nom, 
-            tm_usuarios.usu_ape, 
-            tm_genero.gen_nombre, 
-            tm_carrera.nom_carrera,
-            tm_semestre.sem_nom
-        FROM 
-            tm_alumno
-            INNER JOIN tm_genero ON tm_alumno.gen_id = tm_genero.gen_id                 
-            INNER JOIN tm_carrera ON tm_alumno.id_carrera = tm_carrera.id_carrera 
-            INNER JOIN tm_semestre ON tm_alumno.sem_id = tm_semestre.sem_id 
-            INNER JOIN tm_usuarios ON tm_alumno.usu_id = tm_usuarios.usu_id 
-        WHERE 
-            tm_alumno.alu_id = ?";
-        $sql=$conectar->prepare($sql);
-        $sql->bindValue(1, $alu_id);
-        $sql->execute();
-        return $resultado=$sql->fetchAll();
+        $sql = "SELECT 
+                tm_alumno.alu_id, 
+                tm_alumno.usu_id, 
+                tm_alumno.no_control, 
+                tm_alumno.alu_nom, 
+                tm_alumno.alu_ape, 
+                tm_alumno.gen_id, 
+                tm_alumno.id_carrera, 
+                tm_alumno.sem_id, 
+                tm_alumno.fecha_inscripcion,  -- Agregado el campo fecha_inscripcion
+                tm_alumno.anio,               -- Agregado el campo anio
+                tm_usuarios.usu_nom, 
+                tm_usuarios.usu_ape, 
+                tm_genero.gen_nombre, 
+                tm_carrera.nom_carrera,
+                tm_semestre.sem_nom
+                FROM 
+                tm_alumno
+                INNER JOIN tm_genero ON tm_alumno.gen_id = tm_genero.gen_id                 
+                INNER JOIN tm_carrera ON tm_alumno.id_carrera = tm_carrera.id_carrera 
+                INNER JOIN tm_semestre ON tm_alumno.sem_id = tm_semestre.sem_id 
+                INNER JOIN tm_usuarios ON tm_alumno.usu_id = tm_usuarios.usu_id 
+                WHERE 
+                    tm_alumno.alu_id = ?";
+                $sql = $conectar->prepare($sql);
+                $sql->bindValue(1, $alu_id);
+                $sql->execute();
+                return $resultado = $sql->fetchAll();
     }
+    
 
     public function filtrar_alumno($no_control, $alu_nom, $alu_ape, $gen_id, $id_carrera, $sem_id, $estado) {
         $conectar = parent::conexion();

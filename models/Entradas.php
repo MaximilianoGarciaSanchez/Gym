@@ -29,20 +29,30 @@ class Entradas extends Conectar {
                 }
 
                 // Obtener el semestre actual del alumno
-                $sql_obtener_semestre = "SELECT sem_id FROM tm_alumno WHERE no_control = ?";
+                $sql_obtener_semestre = "SELECT fecha_inscripcion FROM tm_alumno WHERE no_control = ?";
                 $stmt_obtener_semestre = $conectar->prepare($sql_obtener_semestre);
                 $stmt_obtener_semestre->bindParam(1, $no_control);
                 $stmt_obtener_semestre->execute();
                 $resultado_obtener_semestre = $stmt_obtener_semestre->fetch(PDO::FETCH_ASSOC);
-                $sem_id = $resultado_obtener_semestre['sem_id'];
+                $fecha_inscripcion = $resultado_obtener_semestre['fecha_inscripcion'];
 
-                $sql = "INSERT INTO td_asistencia2 (no_control, hora_inicio, fecha, semestre_registrado)
-                        VALUES (?, ?, ?, ?)";
+                // Obtener el anio actual del alumno
+                $sql_obtener_anio = "SELECT anio FROM tm_alumno WHERE no_control = ?";
+                $stmt_obtener_anio = $conectar->prepare($sql_obtener_anio);
+                $stmt_obtener_anio->bindParam(1, $no_control);
+                $stmt_obtener_anio->execute();
+                $resultado_obtener_anio = $stmt_obtener_anio->fetch(PDO::FETCH_ASSOC);
+                $anio = $resultado_obtener_anio['anio'];
+
+                $sql = "INSERT INTO td_asistencia2 (no_control, hora_inicio, fecha, semestre_registrado,anio)
+                        VALUES (?, ?, ?, ?, ?)";
                 $stmt = $conectar->prepare($sql);
                 $stmt->bindParam(1, $no_control);
                 $stmt->bindParam(2, $hora_inicio);
                 $stmt->bindParam(3, $fecha);
-                $stmt->bindParam(4, $sem_id);
+                $stmt->bindParam(4, $fecha_inscripcion);
+                $stmt->bindParam(5, $anio);
+
             } elseif ($hora_fin !== null) {
                 // Registro de salida
                 $sql = "UPDATE td_asistencia2
