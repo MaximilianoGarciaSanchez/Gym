@@ -5,13 +5,21 @@ class Entradas extends Conectar {
         parent::set_names();
 
         // Verificar si el no_control existe en la tabla tm_alumno
-        $sql_verificar = "SELECT COUNT(*) AS existencia FROM tm_alumno WHERE no_control = ?";
+        $sql_verificar = "SELECT COUNT(*) AS existencia, estado FROM tm_alumno WHERE no_control = ?";
         $stmt_verificar = $conectar->prepare($sql_verificar);
         $stmt_verificar->bindParam(1, $no_control);
         $stmt_verificar->execute();
         $resultado_verificar = $stmt_verificar->fetch(PDO::FETCH_ASSOC);
 
         if ($resultado_verificar['existencia'] > 0) {
+            $estado_alumno = $resultado_verificar['estado'];
+
+            // Verificar el estado del alumno
+            if ($estado_alumno === "desactivado") {
+                echo "alumno_desactivado";
+                return;
+            }
+
             // Verificar si ya se ha registrado la asistencia para este número de control y fecha (sin tener en cuenta la hora)
             $sql_verificar_asistencia = "SELECT COUNT(*) AS existencia FROM td_asistencia2 WHERE no_control = ? AND DATE(fecha) = ?";
             $stmt_verificar_asistencia = $conectar->prepare($sql_verificar_asistencia);
@@ -44,7 +52,7 @@ class Entradas extends Conectar {
                 $resultado_obtener_anio = $stmt_obtener_anio->fetch(PDO::FETCH_ASSOC);
                 $anio = $resultado_obtener_anio['anio'];
 
-                $sql = "INSERT INTO td_asistencia2 (no_control, hora_inicio, fecha, semestre_registrado,anio)
+                $sql = "INSERT INTO td_asistencia2 (no_control, hora_inicio, fecha, semestre_registrado, anio)
                         VALUES (?, ?, ?, ?, ?)";
                 $stmt = $conectar->prepare($sql);
                 $stmt->bindParam(1, $no_control);
@@ -68,10 +76,10 @@ class Entradas extends Conectar {
                 // La asistencia se ha registrado correctamente
 
                 // Actualizar el estado del alumno
-                $estado_alumno = ($hora_inicio !== null) ? 'Entrada' : 'Salida';
+                $estado_asistencia = ($hora_inicio !== null) ? 'Entrada' : 'Salida';
                 $sql_actualizar_estado = "UPDATE td_asistencia2 SET alu_estado = ? WHERE no_control = ?";
                 $stmt_actualizar_estado = $conectar->prepare($sql_actualizar_estado);
-                $stmt_actualizar_estado->bindParam(1, $estado_alumno);
+                $stmt_actualizar_estado->bindParam(1, $estado_asistencia);
                 $stmt_actualizar_estado->bindParam(2, $no_control);
                 $stmt_actualizar_estado->execute();
 
@@ -86,5 +94,4 @@ class Entradas extends Conectar {
         }
     }
 }
-
 ?>

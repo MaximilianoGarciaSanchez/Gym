@@ -25,9 +25,8 @@
                 $sub_array[] = $row["alu_ape"];
                 $sub_array[] = $row["gen_nombre"];
                 $sub_array[] = $row["nom_carrera"];
-                $sub_array[] = $row["sem_nom"];
-
-               
+                // $sub_array[] = $row["sem_nom"];
+                $sub_array[] = ($row["fecha_inscripcion"] == 1) ? "Enero-Junio " . $row["anio"] : "Julio-Diciembre " . $row["anio"];
                 $sub_array[] = '<button type="button" onClick="ver('.$row["alu_id"].');"  id="'.$row["alu_id"].'" class="btn btn-inline btn-primary btn-sm ladda-button"><i class="fa fa-eye"></i></button>';
                 $sub_array[] = '<button type="button" onClick="editar('.$row["alu_id"].');"  id="'.$row["alu_id"].'" class="btn btn-inline btn-warning btn-sm ladda-button"><i class="fa fa-edit"></i></button>';
                 $sub_array[] = '<button type="button" onClick="eliminar('.$row["alu_id"].');"  id="'.$row["alu_id"].'" class="btn btn-inline btn-danger btn-sm ladda-button"><i class="fa fa-trash"></i></button>';
@@ -74,7 +73,10 @@
                 isset($_POST["gen_id"]) ? $_POST["gen_id"] : null,
                 isset($_POST["id_carrera"]) ? $_POST["id_carrera"] : null,
                 isset($_POST["sem_id"]) ? $_POST["sem_id"] : null,
-                isset($_POST["estado"]) ? $_POST["estado"] : null
+                isset($_POST["estado"]) ? $_POST["estado"] : null,
+                isset($_POST["fecha_inscripcion"]) ? $_POST["fecha_inscripcion"] : null,
+                isset($_POST["anio"]) ? $_POST["anio"] : null
+
 
             );
         
@@ -92,7 +94,10 @@
                 $sub_array[] = $row["alu_ape"];
                 $sub_array[] = $row["gen_nombre"];
                 $sub_array[] = $row["nom_carrera"];
-                $sub_array[] = $row["sem_nom"];
+                // $sub_array[] = $row["sem_nom"];
+                $sub_array[] = ($row["fecha_inscripcion"] == 1) ? "Enero-Junio " . $row["anio"] : "Julio-Diciembre " . $row["anio"];
+
+                
                 $sub_array[] = '<button type="button" onClick="ver('.$row["alu_id"].');"  id="'.$row["alu_id"].'" class="btn btn-inline btn-primary btn-sm ladda-button"><i class="fa fa-eye"></i></button>';
                 $sub_array[] = '<button type="button" onClick="editar('.$row["alu_id"].');"  id="'.$row["alu_id"].'" class="btn btn-inline btn-warning btn-sm ladda-button"><i class="fa fa-edit"></i></button>';
                 $sub_array[] = '<button type="button" onClick="eliminar('.$row["alu_id"].');"  id="'.$row["alu_id"].'" class="btn btn-inline btn-danger btn-sm ladda-button"><i class="fa fa-trash"></i></button>';
@@ -144,7 +149,7 @@
         case "listar_detalle":
             $datos = $alumno->listar_alumnodetalle($_POST["alu_id"]);
             ?> 
-        
+                
                     <!-- Mostrar detalles generales del alumno -->
                     <div class="alumno-details">
                 
@@ -203,14 +208,40 @@
                             }
                             ?>
                         </div>
-                
+
+                        <!-- <div class="box-typical box-typical-padding">
+                            <div class="row">
+                                <div class="col-lg-3">
+                                    <fieldset class="form-group">
+                                        <label class="form-label" for="anio">Año</label>
+                                        <input type="text" class="form-control" id="anio" placeholder="Ingrese El Año" required>
+                                    </fieldset>
+                                </div>
+                            
+                                <div class="col-lg-4">
+                                    <fieldset class="form-group">
+                                        <label class="form-label" for="semestre_registrado">Semestre Del Año</label>
+                                        <select id="semestre_registrado" name="semestre_registrado" class="form-control" data-placeholder="Seleccionar">
+                                            <option label="Seleccionar"></option>
+                                            <option value="1">Enero-Junio</option>
+                                            <option value="2">Julio-Diciembre</option>                                        </select>
+                                    </fieldset>
+                                </div>
+                                <div class="col-lg-2">
+                                    <fieldset class="form-group">
+                                        <label class="form-label" for="alumno_titulo">&nbsp;</label>
+                                        <button type="submit" class="btn btn-rounded btn-primary btn-block" id="btnfiltrar">Filtrar</button>
+                                    </fieldset>
+                                </div>
+                            </div>
+                        </div> -->
                         <!-- Mostrar detalles de asistencia (dentro del foreach) -->
                         <div class="box-typical box-typical-padding" id="table">
                             <table id="alumno_data" class="table table-bordered table-striped table-vcenter js-dataTable-full">
                                 <thead>
                                     <tr>
-                                        <th class="d-none d-sm-table-cell" style="width: 20%;">Fecha de Inscripción</th>
-                                        <th class="d-none d-sm-table-cell" style="width: 20%;">Fecha</th>
+                                        <th class="d-none d-sm-table-cell" style="width: 22%;">Año Del Semestre</th>
+                                        <th class="d-none d-sm-table-cell" style="width: 18%;">Fecha</th>
                                         <th class="d-none d-sm-table-cell" style="width: 20%;">Entrada</th>
                                         <th class="d-none d-sm-table-cell" style="width: 20%;">Salida</th>
                                         <th class="d-none d-sm-table-cell" style="width: 20%;">Tiempo total</th>
@@ -239,16 +270,7 @@
                                 </tbody>
                             </table>
                         </div>
-                        <?php
-                        foreach ($datos as $row) {
-                            ?>
-                            <tr>
-                                <!-- Aquí debes llenar las celdas de la tabla con los datos de asistencia -->
-                                <!-- Ejemplo: <td><?php echo $row['nombre_campo']; ?></td> -->
-                            </tr>
-                            <?php
-                        }
-                        ?>
+                        
                     </div>
         
                     <?php
@@ -264,7 +286,7 @@
                 $gen_id = $_POST["gen_id1"];
                 $id_carrera = $_POST["id_carrera1"];
                 $sem_id = $_POST["sem_id1"];
-                $fecha_inscripcion = isset($_POST["fecha_inscripcion"]) ? $_POST["fecha_inscripcion"] : null;
+                $fecha_inscripcion = $_POST["fecha_inscripcion1"];
                 $anio = $_POST["anio"];
     
         

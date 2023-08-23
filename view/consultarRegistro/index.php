@@ -36,78 +36,97 @@ if(isset($_SESSION["usu_id"])){
 			</header>
 
 			<div class="box-typical box-typical-padding">
-    <div class="row">
-        <div class="col-lg-12">
-            <fieldset class="form-group">
-                <label class="form-label" for="alumno_titulo"></label>
-            </fieldset>
-        </div>
-        <div class="col-lg-3">
-            <fieldset class="form-group">
-                <label class="form-label" for="no_control">Numero de Control</label>
-                <input type="text" class="form-control" id="no_control" placeholder="Ingrese No.Control" required>
-            </fieldset>
-        </div>
-        <div class="col-lg-3">
-            <fieldset class="form-group">
-                <label class="form-label" for="alu_nom">Nombre</label>
-                <input type="text" class="form-control" id="alu_nom" placeholder="Ingrese el Nombre" required>
-            </fieldset>
-        </div>
-        <div class="col-lg-3">
-            <fieldset class="form-group">
-                <label class="form-label" for="alu_ape">Apellido</label>
-                <input type="text" class="form-control" id="alu_ape" placeholder="Ingrese el Apellido" required>
-            </fieldset>
-        </div>
-        <div class="col-lg-3">
-            <fieldset class="form-group">
-                <label class="form-label" for="gen_id">Genero</label>
-                <select id="gen_id" name="gen_id" class="form-control" data-placeholder="Seleccionar">
-                    <option label="Seleccionar"></option>
-                </select>
-            </fieldset>
-        </div>
-        <div class="col-lg-3">
-            <fieldset class="form-group">
-                <label class="form-label" for="id_carrera">Carrera</label>
-                <select id="id_carrera" name="id_carrera" class="form-control" data-placeholder="Seleccionar">
-                    <option label="Seleccionar"></option>
-                </select>
-            </fieldset>
-        </div>
-        <div class="col-lg-3">
-            <fieldset class="form-group">
-                <label class="form-label" for="sem_id">Semestre</label>
-                <select id="sem_id" name="sem_id" class="form-control" data-placeholder="Seleccionar">
-                    <option label="Seleccionar"></option>
-                </select>
-            </fieldset>
-        </div>
-        <div class="col-lg-2">
-            <fieldset class="form-group">
-                <label class="form-label" for="estado">Estado</label>
-                <select id="estado" name="estado" class="form-control" data-placeholder="Seleccionar">
-                     <option label="Seleccionar"></option>
-                     <option value="Activado">Activado</option>
-                     <option value="Desactivado">Desactivado</option>
-                </select>
-            </fieldset>
-        </div>
+                <div class="row">
+                    <div class="col-lg-3">
+                        <fieldset class="form-group">
+                            <label class="form-label" for="no_control">Numero de Control</label>
+                            <input type="text" class="form-control" id="no_control" placeholder="Ingrese No.Control" required>
+                        </fieldset>
+                    </div>
+                    <div class="col-lg-3">
+                        <fieldset class="form-group">
+                            <label class="form-label" for="alu_nom">Nombre</label>
+                            <input type="text" class="form-control" id="alu_nom" placeholder="Ingrese el Nombre" required>
+                        </fieldset>
+                    </div>
+                    <div class="col-lg-3">
+                        <fieldset class="form-group">
+                            <label class="form-label" for="alu_ape">Apellido</label>
+                            <input type="text" class="form-control" id="alu_ape" placeholder="Ingrese el Apellido" required>
+                        </fieldset>
+                    </div>
+                    <div class="col-lg-3">
+                        <fieldset class="form-group">
+                            <label class="form-label" for="gen_id">Genero</label>
+                            <select id="gen_id" name="gen_id" class="form-control" data-placeholder="Seleccionar">
+                                <option label="Seleccionar"></option>
+                            </select>
+                        </fieldset>
+                    </div>
+                    <div class="col-lg-3">
+                        <fieldset class="form-group">
+                            <label class="form-label" for="id_carrera">Carrera</label>
+                            <select id="id_carrera" name="id_carrera" class="form-control" data-placeholder="Seleccionar">
+                                <option label="Seleccionar"></option>
+                            </select>
+                        </fieldset>
+                    </div>
+                    <div class="col-lg-2">
+                        <fieldset class="form-group">
+                            <label class="form-label" for="sem_id">Semestre</label>
+                            <select id="sem_id" name="sem_id" class="form-control" data-placeholder="Seleccionar">
+                                <option label="Seleccionar"></option>
+                            </select>
+                        </fieldset>
+                    </div>
+                    <div class="col-lg-2">
+                        <fieldset class="form-group">
+                            <label class="form-label" for="estado">Estado</label>
+                            <select id="estado" name="estado" class="form-control" data-placeholder="Seleccionar">
+                                <option label="Seleccionar"></option>
+                                <option value="Activado">Activado</option>
+                                <option value="Desactivado">Desactivado</option>
+                            </select>
+                        </fieldset>
+                    </div>
+                    <div class="col-lg-3">
+                        <fieldset class="form-group">
+                            <label class="form-label" for="fecha_inscripcion">Semestre Escolar</label>
+                            <select id="fecha_inscripcion" name="fecha_inscripcion" class="form-control" data-placeholder="Seleccionar">
+                                <option label="Seleccionar"></option>
+                            </select>
+                        </fieldset>
+                    </div>
+                    <div class="col-lg-2">
+                <fieldset class="form-group">
+                    <label class="form-label" for="anio">Año</label>
+                    <select id="anio" name="anio" class="form-control" data-placeholder="Seleccionar">
+                        <option label="Seleccionar"></option>
+                        <option value="2023">2023</option>
+                        <option value="2024">2024</option>
+                        <option value="2025">2025</option>
+                        <option value="2026">2026</option>
+                        <option value="2027">2027</option>
+                        <option value="2028">2028</option>
+
+                        <!-- Agrega más opciones de años según sea necesario -->
+                    </select>
+                </fieldset>
+            </div>
         <div class="col-lg-2">
             <fieldset class="form-group">
                 <label class="form-label" for="alumno_titulo">&nbsp;</label>
                 <button type="submit" class="btn btn-rounded btn-primary btn-block" id="btnfiltrar">Filtrar</button>
             </fieldset>
-        </div>
-        <div class="col-lg-2">
-            <fieldset class="form-group">
-                <label class="form-label" for="alumno_titulo">&nbsp;</label>
-                <button type="submit" class="btn btn-rounded btn-danger btn-block" id="desactivar">Desactivar</button>
-            </fieldset>
-        </div>
-    </div>
-</div>
+                </div>
+                <div class="col-lg-2">
+                    <fieldset class="form-group">
+                        <label class="form-label" for="alumno_titulo">&nbsp;</label>
+                        <button type="submit" class="btn btn-rounded btn-danger btn-block" id="desactivar">Desactivar</button>
+                    </fieldset>
+                    </div>
+                </div>
+            </div>
 
 					
 			
@@ -121,8 +140,8 @@ if(isset($_SESSION["usu_id"])){
 								<th class="d-none d-sm-table-cell" style="width: 20%;">Apellido</th>
 								<th class="d-none d-sm-table-cell" style="width: 10%;">Genero</th>
 								<th class="d-none d-sm-table-cell" style="width: 15%;">Carrera</th>
-								<th class="d-none d-sm-table-cell" style="width: 10%;">Semestre</th>	
-								<th class="d-none d-sm-table-cell" style="width: 1%;"></th>	
+								<th class="d-none d-sm-table-cell" style="width: 10%;">Semestre Escolar</th>	
+                                <th class="d-none d-sm-table-cell" style="width: 1%;"></th>	
 								<th class="d-none d-sm-table-cell" style="width: 1%;"></th>
 								<th class="d-none d-sm-table-cell" style="width: 1%;"></th>	
 			

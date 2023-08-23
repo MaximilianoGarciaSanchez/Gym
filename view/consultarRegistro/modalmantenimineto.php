@@ -78,9 +78,9 @@
                         <div class="col-lg-6">
                             <fieldset class="form-group">
                                 <label class="form-label semibold" for="fecha_inscripcion">Semestre</label>
-                                <select id="fecha_inscripcion" name="fecha_inscripcion" class="form-control">
-                                    <option value="ene-jun">Enero-Junio</option>
-                                    <option value="jul-dic">Julio-Diciembre</option>
+                                <select id="fecha_inscripcion1" name="fecha_inscripcion1" class="form-control">
+                                    <option value="1">Enero-Junio</option>
+                                    <option value="2">Julio-Diciembre</option>
                                 </select>
                             </fieldset>
                         </div>

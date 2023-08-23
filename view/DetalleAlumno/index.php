@@ -31,8 +31,7 @@ if(isset($_SESSION["usu_id"])){
                 <span class="label label-pill label-primary" id="lblnomusuario"></span>
                 <span class="label label-pill label-default" id="lblfechcrea"></span>
                 <ol class="breadcrumb breadcrumb-simple">
-                  <!-- <li><a href="#">Home</a></li>
-                  <li class="active">Detalle Alumno</li> -->
+                  
                 </ol>
               </div>
             </div>

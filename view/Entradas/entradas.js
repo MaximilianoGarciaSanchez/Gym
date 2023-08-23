@@ -232,10 +232,10 @@ $(document).ready(function(){
                             type: "error",
                             showConfirmButton: true
                         });
-                    } else if (response === "registro_duplicado") {
+                    } else if (response === "alumno_desactivado") {
                         swal({
                             title: "¡Error!",
-                            text: "Ya se ha registrado la asistencia para este número de control hoy.",
+                            text: "Ya se ha registrado la asistencia hoy, o no esta inscrito.",
                             type: "error",
                             showConfirmButton: true
                         });

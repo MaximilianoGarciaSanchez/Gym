@@ -54,15 +54,6 @@ if(isset($_SESSION["usu_id"])){
 				</div>
 			</div>
 
-			<!-- <section class="card">
-				<header class="card-header">
-					Grafico Estadístico
-				</header>
-				<div class="card-block">
-					<div id="divgrafico" style="height: 250px;"></div>
-				</div>
-			</section> -->
-
 		</div>
 	</div>
 

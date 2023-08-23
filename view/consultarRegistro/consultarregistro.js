@@ -10,6 +10,9 @@ function limpiarCampos() {
     $('#id_carrera').val('').trigger('change');
     $('#sem_id').val('').trigger('change');
     $('#estado').val('').trigger('change');
+    $('#fecha_inscripcion').val('').trigger('change');
+    $('#anio').val('').trigger('change');
+
 }
 
 $(document).on("click", "#desactivar", function() {
@@ -130,9 +133,12 @@ $(document).ready(function(){
         var alu_ape = $('#alu_ape').val();
         var gen_id = $('#gen_id').val();
         var id_carrera = $('#id_carrera').val();
-        var sem_id = $('#sem_id').val();
+        // var sem_id = $('#sem_id').val();
+        var fecha_inscripcion= $('#fecha_inscripcion').val();
+        var anio = $('#anio').val();
+
         
-        listardatatable(no_control,alu_nom,alu_ape,gen_id,id_carrera,sem_id);
+        listardatatable(no_control,alu_nom,alu_ape,gen_id,id_carrera,fecha_inscripcion,anio);
 
 
         
@@ -219,7 +225,7 @@ function editar(alu_id){
         $('#gen_id1').val(data.gen_id).trigger('change');
         $('#id_carrera1').val(data.id_carrera).trigger('change');
         $('#sem_id1').val(data.sem_id).trigger('change');
-        $('#fecha_inscripcion').val(data.fecha_inscripcion).trigger('change');  // Ajustado el ID del campo
+        $('#fecha_inscripcion1').val(data.fecha_inscripcion).trigger('change');  // Ajustado el ID del campo
         $('#anio1').val(data.anio);
     }); 
 
@@ -236,16 +242,19 @@ $(document).on("click","#btnfiltrar", function(){
         var id_carrera = $('#id_carrera').val();
         var sem_id = $('#sem_id').val();
         var estado = $('#estado').val();
+        var fecha_inscripcion = $('#fecha_inscripcion').val();
+        var anio = $('#anio').val();
+
 
         
 
-    listardatatable(no_control,alu_nom,alu_ape,gen_id,id_carrera,sem_id, estado);
+    listardatatable(no_control,alu_nom,alu_ape,gen_id,id_carrera,sem_id,estado,fecha_inscripcion,anio);
 
     limpiarCampos();
 
 });
 
-function listardatatable(no_control,alu_nom,alu_ape,gen_id,id_carrera,sem_id,estado){
+function listardatatable(no_control,alu_nom,alu_ape,gen_id,id_carrera,sem_id,estado,fecha_inscripcion,anio){
 
     tabla=$('#alumno_data').dataTable({
         "aProcessing": true,
@@ -264,7 +273,7 @@ function listardatatable(no_control,alu_nom,alu_ape,gen_id,id_carrera,sem_id,est
                 url: '../../controller/alumno.php?op=listar_filtro',
                 type : "post",
                 dataType : "json",
-                data:{ no_control : no_control, alu_nom, alu_ape, gen_id, id_carrera, sem_id, estado  },
+                data:{ no_control : no_control, alu_nom, alu_ape, gen_id, id_carrera, sem_id, estado,fecha_inscripcion,anio  },
 
           
                 error: function(e){
@@ -318,7 +327,7 @@ function limpiar(){
 							"<th class='d-none d-sm-table-cell' style='width: 20%;'>Apellido</th>"+
 							"<th class='d-none d-sm-table-cell' style='width: 10%;'>Genero</th>"+
 							"<th class='d-none d-sm-table-cell' style='width: 15%;'>Carrera</th>"+
-							"<th class='d-none d-sm-table-cell' style='width: 10%;'>Semestre</th>"+	
+							"<th class='d-none d-sm-table-cell' style='width: 10%;'>Semestre Escolar</th>"+	
 							"<th class='d-none d-sm-table-cell' style='width: 1%;'></th>"+	
 							"<th class='d-none d-sm-table-cell' style='width: 1%;'></th>"+
 							"<th class='d-none d-sm-table-cell' style='width: 1%;'></th>"+	
